@@ -13,7 +13,7 @@ module Jbcn
                (password = h[:password]))
           credentials = UserCredentials.new(client_id: client_id, username: username, password: password)
         else
-          fail(ArgumentError, "missing keyword: either [code] or [client_id, email, password]")
+          fail(ArgumentError.new("missing keyword: either [code] or [client_id, email, password]"))
         end
       end
       @token = credentials.authenticate(faraday)
@@ -24,7 +24,7 @@ module Jbcn
         fail(RuntimeError, "not authenticated")
       end
       unless [:in, :out].include?(in_out)
-        fail(ArgumentError, "expected :in or :out")
+        fail(ArgumentError.new("expected :in or :out"))
       end
 
       params = build_params(in_out, group_id.to_s, note.to_s, !!night_shift)

@@ -22,12 +22,12 @@ module Jbcn
       response = faraday.get(AUTH_ENDPOINT + @code) rescue fail(AuthError)
 
       unless response.status == 200
-        fail(AuthError, response: response)
+        fail(AuthError.new(response: response))
       end
 
       token = response.body[/<input type="hidden" class="token" name="token" value="([^"]+)">/, 1]
       unless token
-        fail(AuthTokenNotFoundError, response: response)
+        fail(AuthTokenNotFoundError.new(response: response))
       end
 
       token
@@ -49,12 +49,12 @@ module Jbcn
       response = faraday.post(AUTH_ENDPOINT, params) rescue fail(AuthError)
 
       unless response.status == 200
-        fail(AuthError, response: response)
+        fail(AuthError.new(response: response))
       end
 
       token = response.body[/<input type="hidden" class="token" name="token" value="([^"]+)">/, 1]
       unless token
-        fail(AuthTokenNotFoundError, response: response)
+        fail(AuthTokenNotFoundError.new(response: response))
       end
 
       token
