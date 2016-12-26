@@ -5,10 +5,11 @@ module Jbcn
   end
 
   class AuthError < Error
-    attr_reader :response
+    attr_reader :credentials, :response
 
-    def initialize(message = nil, response: nil)
+    def initialize(message = nil, credentials: nil, response: nil)
       super(message || default_message)
+      @credentials = credentials
       @response = response
     end
 

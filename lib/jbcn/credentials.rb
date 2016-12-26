@@ -19,15 +19,16 @@ module Jbcn
     end
 
     def authenticate(faraday)
-      response = faraday.get(AUTH_ENDPOINT + @code) rescue fail(AuthError)
+      response = faraday.get(AUTH_ENDPOINT + @code) rescue
+        fail(AuthError.new(credentials: self))
 
       unless response.status == 200
-        fail(AuthError.new(response: response))
+        fail(AuthError.new(credentials: self, response: response))
       end
 
       token = response.body[/<input type="hidden" class="token" name="token" value="([^"]+)">/, 1]
       unless token
-        fail(AuthTokenNotFoundError.new(response: response))
+        fail(AuthTokenNotFoundError.new(credentials: self, response: response))
       end
 
       token
@@ -46,7 +47,8 @@ module Jbcn
     end
 
     def authenticate(faraday)
-      response = faraday.post(AUTH_ENDPOINT, params) rescue fail(AuthError)
+      response = faraday.post(AUTH_ENDPOINT, params) rescue
+        fail(AuthError.new(credentials: self))
 
       unless response.status == 200
         fail(AuthError.new(response: response))
