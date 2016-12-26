@@ -34,7 +34,42 @@ module Jbcn
     end
   end
 
-  # TODO
-  #class UserCredentials < Credentials
-  #end
+  class UserCredentials < Credentials
+    AUTH_ENDPOINT = "https://ssl.jobcan.jp/login/pc-employee/try"
+
+    attr_reader :client_id, :username, :password
+
+    def initialize(client_id:, username:, password:)
+      @client_id = client_id
+      @username = username
+      @password = password
+    end
+
+    def authenticate(faraday)
+      response = faraday.post(AUTH_ENDPOINT, params) rescue fail(AuthError)
+
+      unless response.status == 200
+        fail(AuthError, response: response)
+      end
+
+      token = response.body[/<input type="hidden" class="token" name="token" value="([^"]+)">/, 1]
+      unless token
+        fail(AuthTokenNotFoundError, response: response)
+      end
+
+      token
+    end
+
+    private
+
+    def params
+      {
+        client_id: @client_id,
+        email: @username, # email or staff code in fact
+        password: @password,
+        url: "/employee",
+        login_type: "1",
+      }
+    end
+  end
 end

@@ -5,8 +5,16 @@ module Jbcn
     CLOCK_ENDPOINT = "https://ssl.jobcan.jp/employee/index/adit"
 
     def authenticate(credentials)
-      if credentials.is_a?(Hash) && (code = credentials[:code])
-        credentials = CodeCredentials.new(code)
+      if (h = credentials).is_a?(Hash)
+        if (code = h[:code])
+          credentials = CodeCredentials.new(code)
+        elsif ((client_id = h[:client_id]) &&
+               (username = h[:username]) &&
+               (password = h[:password]))
+          credentials = UserCredentials.new(client_id: client_id, username: username, password: password)
+        else
+          fail(ArgumentError, "missing keyword: either [code] or [client_id, email, password]")
+        end
       end
       @token = credentials.authenticate(faraday)
     end

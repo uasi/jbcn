@@ -23,7 +23,7 @@ module Jbcn
     private
 
     def default_message
-      "token not found (maybe jobcan's html structure has changed)"
+      "token not found (maybe credentials are incorrect or jobcan's html structure has changed)"
     end
   end
 
