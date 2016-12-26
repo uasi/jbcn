@@ -1,8 +1,7 @@
 # Jbcn
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/jbcn`. To experiment with that code, run `bin/console` for an interactive prompt.
+Jbcn is a client for [Jobcan](http://jobcan.ne.jp).
 
-TODO: Delete this and the text above, and describe your gem
 
 ## Installation
 
@@ -22,7 +21,20 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+require "jbcn"
+
+client = Jbcn::Client.new
+client.authenticate(code: "your code goes here")
+
+# Clock in/out
+client.clock(:in, group_id: "1")
+p client.clock(:out, group_id: "1")
+# => {"result"=>1, "state"=>"4", "current_status"=>"returned_home"}
+
+# Clock in with extra info
+client.clock(:in, group_id: "1", note: "my first night shift", night_shift: true)
+```
 
 ## Development
 
@@ -32,10 +44,8 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/jbcn.
-
+Bug reports and pull requests are welcome on GitHub at https://github.com/uasi/jbcn.
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
