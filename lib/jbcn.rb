@@ -1,5 +1,9 @@
-require "jbcn/version"
+require "faraday"
+require "faraday_middleware"
+require "faraday-cookie_jar"
+require "json"
 
-module Jbcn
-  # Your code goes here...
-end
+require "jbcn/version"
+require "jbcn/error"
+require "jbcn/credentials"
+require "jbcn/client"
