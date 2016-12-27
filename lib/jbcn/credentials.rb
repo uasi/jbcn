@@ -26,12 +26,10 @@ module Jbcn
         fail(AuthError.new(credentials: self, response: response))
       end
 
-      token = response.body[/<input type="hidden" class="token" name="token" value="([^"]+)">/, 1]
-      unless token
+      @token = response.body[/<input type="hidden" class="token" name="token" value="([^"]+)">/, 1] or
         fail(AuthTokenNotFoundError.new(credentials: self, response: response))
-      end
 
-      token
+      @token
     end
   end
 
@@ -54,12 +52,10 @@ module Jbcn
         fail(AuthError.new(response: response))
       end
 
-      token = response.body[/<input type="hidden" class="token" name="token" value="([^"]+)">/, 1]
-      unless token
+      @token = response.body[/<input type="hidden" class="token" name="token" value="([^"]+)">/, 1] or
         fail(AuthTokenNotFoundError.new(response: response))
-      end
 
-      token
+      @token
     end
 
     private
