@@ -23,8 +23,8 @@ module Jbcn
       unless @token
         fail(RuntimeError, "not authenticated")
       end
-      unless [:in, :out].include?(in_out)
-        fail(ArgumentError.new("expected :in or :out"))
+      unless [:auto, :in, :out].include?(in_out)
+        fail(ArgumentError.new("expected :auto or :in or :out"))
       end
 
       params = build_params(in_out, group_id.to_s, note.to_s, !!night_shift)
@@ -54,7 +54,7 @@ module Jbcn
 
     def build_params(in_out, group_id, note, night_shift)
       {
-        adit_item: in_out == :in ? "work_start" : "work_end",
+        adit_item: {auto: "DEF", in: "work_start", out: "work_end"}[in_out],
         adit_group_id: group_id,
         notice: note,
         is_yakin: night_shift ? "1" : "0",
